@@ -12,14 +12,6 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/product/">
 
-    
-
-    <!-- Bootstrap core CSS -->
-    <!--  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"> -->
-	<!--  <link rel="stylesheet" href="https://getbootstrap.com/docs/4.6/dist/css/bootstrap.min.css"> -->
-	<link rel="stylesheet" href="/resources/css/bootstrap.min2.css">
-
-
 
     <style>
       .bd-placeholder-img {
@@ -60,8 +52,8 @@
     </div>    
     
     <div class="col-md-2">
-    	<label for="exampleInputEmail1">&nbsp;</label>
-    	<button type="button" class="form-control">Id duplicate check</button>
+    	<label for="idStatus">&nbsp;</label>
+    	<button type="button" class="form-control" id="btnIDCHK">Id duplicate check</button>
     </div>
   </div>
   
@@ -81,14 +73,26 @@
     <input type="text" class="form-control" id="cus_phone" name="cus_phone">
   </div>
   
-  <div class="form-group">
-    <label for="cus_mail">Email address</label>
-    <input type="text" class="form-control" id="cus_mail" name="cus_mail">
-  </div>
+  <div class="form-row">
+  	<div class="col-md-6">
+    	<label for="cus_mail">Email address</label>
+    	<input type="text" class="form-control" id="cus_mail" name="cus_mail">
+    </div>
   
-  <div class="form-group form-check">
-   	<input type="checkbox" class="form-check-input" id="cus_receive" name="cus_receive" value="Y">
-   	<label class="form-check-label" for="cus_receive">receive mail</label>
+    <div class="col-md-2">
+    	<label for="btnMailAuthReq">메일확인바랍니다.</label>
+    	<button type="button" class="form-control" id="btnMailAuthReq">메일인증요청</button>
+    </div>
+    
+    <div class="col-md-2">
+    	<label for="cus_mail">인증코드입력</label>
+    	<input type="text" class="form-control" id="auth_mail" name="auth_mail">
+    </div>
+  
+    <div class="col-md-2">
+    	<label for="authMailState">&nbsp;</label>
+    	<button type="button" class="form-control" id="btnMailAuthConfirm">인증확인</button>
+    </div>
   </div>
   
   <button type="submit" class="btn btn-primary">Sign Up</button>
@@ -99,8 +103,42 @@
 
 <%@include file="/WEB-INF/views/include/footer.jsp" %>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-      <script>window.jQuery || document.write('<script src="/docs/4.6/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+    
+<script>
+
+  $(document).ready(function(){
+
+    $("#btnIDCHK").on("click", function(){
+
+      let cus_id = $("#cus_id");
+
+      if(cus_id.val() == "" || cus_id.val() == null){
+        alert("아이디를 입력하세요");
+        cus_id.focus();
+        return;
+      }
+
+      $.ajax({
+        url: '/customer/checkID',
+        type: 'get',
+        dataType: 'text',
+        data: {cus_id : cus_id.val() },
+        success: function(data){
+        	
+       	  $("#idStatus").css("color","red");
+          if(data == "Y"){
+            $("#idStatus").html("아이디 사용가능");
+          }else if(data == "N"){
+            cus_id.val("");
+            $("#idStatus").html("아이디 사용불가능");
+          }
+        }
+      });
+    })
+
+  });
+
+</script>
 
       
   </body>

@@ -6,4 +6,6 @@ public interface CustomerService {
 
 	public int join(CustomerVO vo);
 	
+	public String checkID(String cus_id);
+	
 }

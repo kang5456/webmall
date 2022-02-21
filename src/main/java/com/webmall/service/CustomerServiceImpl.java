@@ -20,4 +20,10 @@ public class CustomerServiceImpl implements CustomerService {
 		return mapper.join(vo);
 	}
 
+	@Override
+	public String checkID(String cus_id) {
+		
+		return mapper.checkID(cus_id);
+	}
+
 }

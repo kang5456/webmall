@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ include file="/WEB-INF/views/include/plugin_js.jsp" %>  
+    
 <nav class="site-header sticky-top py-1">
   <div class="container d-flex flex-column flex-md-row justify-content-between">
     <a class="py-2" href="#" aria-label="Product">

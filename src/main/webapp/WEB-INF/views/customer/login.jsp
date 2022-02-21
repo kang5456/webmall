@@ -12,13 +12,6 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/product/">
 
-    
-
-    <!-- Bootstrap core CSS -->
-    <!--  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"> -->
-	<!--  <link rel="stylesheet" href="https://getbootstrap.com/docs/4.6/dist/css/bootstrap.min.css"> -->
-	<link rel="stylesheet" href="/resources/css/bootstrap.min2.css">
-
 
 
     <style>
@@ -86,8 +79,6 @@
 
 <%@include file="/WEB-INF/views/include/footer.jsp" %>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-      <script>window.jQuery || document.write('<script src="/docs/4.6/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
 
       
   </body>
