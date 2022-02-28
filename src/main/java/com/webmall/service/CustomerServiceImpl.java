@@ -26,4 +26,10 @@ public class CustomerServiceImpl implements CustomerService {
 		return mapper.checkID(cus_id);
 	}
 
+	@Override
+	public CustomerVO login(String cus_id) {
+		
+		return mapper.login(cus_id);
+	}
+
 }

@@ -8,4 +8,6 @@ public interface CustomerMapper {
 	
 	public String checkID(String cus_id);
 	
+	public CustomerVO login(String cus_id);
+	
 }

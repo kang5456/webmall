@@ -70,7 +70,7 @@
 		<property name="host"  value="smtp.gmail.com" />
 		<property name="port" value="587"></property>
 		<property name="username" value="kang5456@gmail.com"></property>
-		<property name="password" value="KAng610500)$!#"></property>
+		<property name="password" value="KAng610500%$%^"></property>
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.auth">true</prop>

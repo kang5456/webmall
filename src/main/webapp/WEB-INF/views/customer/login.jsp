@@ -47,15 +47,15 @@
     <div class="container">
       <form>
         <div class="form-group row">
-          <label for="mbsp_id" class="col-sm-2 col-form-label">ID</label>
+          <label for="cus_id" class="col-sm-2 col-form-label">ID</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="mbsp_id" name="mbsp_id" placeholder="ID">
+            <input type="text" class="form-control" id="cus_id" name="cus_id" placeholder="ID">
           </div>
         </div>
         <div class="form-group row">
-          <label for="mbsp_password" class="col-sm-2 col-form-label">Password</label>
+          <label for="cus_pw" class="col-sm-2 col-form-label">Password</label>
           <div class="col-sm-10">
-            <input type="password" class="form-control" id="mbsp_password" name="mbsp_password" placeholder="Password">
+            <input type="password" class="form-control" id="cus_pw" name="cus_pw" placeholder="Password">
           </div>
         </div>
 		 
@@ -79,6 +79,53 @@
 
 <%@include file="/WEB-INF/views/include/footer.jsp" %>
 </div>
+
+  <script>
+
+    $(document).ready(function(){
+
+          $("#btnLogin").on("click", function(){
+
+          let cus_id = $("#cus_id");
+          let cus_pw = $("#cus_pw");
+
+          if(cus_id.val() == "" || cus_id.val() == null){
+            alert("ID를 입력하세요");
+            cus_id.focus();
+            return;
+          }
+
+          if(cus_pw.val() == "" || cus_pw.val() == null){
+            alert("PW를 입력하세요");
+            cus_pw.focus();
+            return;
+          }
+
+          $.ajax({
+            url: '/customer/login',
+            type: 'post',
+            dataType: 'text',
+            data: { cus_id : cus_id.val(), cus_pw : cus_pw.val() },
+            success: function(data){
+              
+            
+            if(data == "success"){
+              alert("로그인 성공.");
+              location.href = "/";
+            }else if(data == "idfail"){
+              alert("ID를 확인해주세요.")
+              cus_id.focus();
+            }else if(data == "pwFail"){
+              alert("비밀번호를 확인해주세요.");
+              cus_id.focus();
+            }
+          }
+        });
+      });
+
+    });
+
+  </script>
 
       
   </body>

@@ -1,5 +1,10 @@
 package com.webmall.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@Data
 public class EmailDTO {
 
 	private String senderName;

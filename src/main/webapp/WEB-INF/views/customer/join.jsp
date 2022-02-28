@@ -44,7 +44,7 @@
 
 	<h3>회원가입 폼</h3>
 	
-<form action="/customer/join" method="post">
+<form action="/customer/join" method="post" id="joinForm">
   <div class="form-row">
   	<div class="col-md-3">
 	    <label for="cus_id">ID</label>
@@ -95,7 +95,7 @@
     </div>
   </div>
   
-  <button type="submit" class="btn btn-primary">Sign Up</button>
+  <button type="button" id="btnJoin" class="btn btn-primary">Sign Up</button>
 </form>
 
 
@@ -108,8 +108,34 @@
 
   $(document).ready(function(){
 
+    let isCheckID = false;
+
+    let isMailAuthConfirm = false;
+
+    $("#joinForm").on("submit", function(){
+
+
+      if(isCheckID == fasle){
+        alert("아이디 중복 확인 바랍니다.");
+        $("#cus_id").focus();
+        return false;
+      }
+
+      if(isMailAuthConfirm == fasle){
+        alert("메일 인증 확인 바랍니다.");
+        $("#btnMailAuthReq").focus();
+        return false;
+      }
+
+    });
+
+
+
+	// 아이디 중복
     $("#btnIDCHK").on("click", function(){
 
+    	isCheckID = false;
+      
       let cus_id = $("#cus_id");
 
       if(cus_id.val() == "" || cus_id.val() == null){
@@ -122,21 +148,84 @@
         url: '/customer/checkID',
         type: 'get',
         dataType: 'text',
-        data: {cus_id : cus_id.val() },
+        data: { cus_id : cus_id.val() },
         success: function(data){
         	
-       	  $("#idStatus").css("color","red");
-          if(data == "Y"){
-            $("#idStatus").html("아이디 사용가능");
-          }else if(data == "N"){
-            cus_id.val("");
-            $("#idStatus").html("아이디 사용불가능");
-          }
-        }
-      });
-    })
+ 	  	 $("#idStatus").css("color","red");
+         if(data == "Y"){
+        	 isCheckID = true;
+           $("#idStatus").html("아이디 사용가능");
+         }else if(data == "N"){
+           cus_id.val("");
+           $("#idStatus").html("아이디 사용불가능");
+         }
+       }
+     });
+   });
 
+
+	// 메일 인증요청
+    $("#btnMailAuthReq").on("click", function(){
+
+      isMailAuthConfirm = false;
+
+      let cus_mail = $("#cus_mail");
+
+      if(cus_mail.val() == "" || cus_mail.val() == null){
+        alert("메일주소를 입력하세요");
+        cus_mail.focus();
+        return;
+      }
+
+      $.ajax({
+        url: '/customer/sendMailAuth',
+        type: 'get',
+        dataType: 'text',
+        data: { cus_mail : cus_mail.val() },
+        success: function(data){
+          
+        
+        if(data == "success"){
+          isMailAuthConfirm = true;
+          alert("인증 메일발송됨.");
+        }else if(data == "fail"){
+        	alert("메일발송 실패")
+        }
+      }
+    });
   });
+
+
+  	// 메일 인증확인
+    $("#btnMailAuthConfirm").on("click", function(){
+
+      let auth_mail = $("#auth_mail");
+
+      if(auth_mail.val() == "" || auth_mail.val() == null){
+        alert("인증코드를 입력하세요");
+        auth_mail.focus();
+        return;
+      }
+
+      $.ajax({
+        url: '/customer/mailAuthConfirm',
+        type: 'get',
+        dataType: 'text',
+        data: { uAuthCode : auth_mail.val() },
+        success: function(data){
+          
+        
+        if(data == "success"){
+          alert("인증 성공.");
+        }else if(data == "fail"){
+          alert("인증 실패 \n 인증코드를 확인해주세요")
+          auth_mail.val("");
+        }
+      }
+    });
+  });
+
+});
 
 </script>
 

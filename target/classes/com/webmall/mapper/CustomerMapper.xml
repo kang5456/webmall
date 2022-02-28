@@ -32,7 +32,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM 
 			customer_tbl
 		WHERE 
-			customer_tbl = #{cus_id}
+			cus_id = #{cus_id}
+	
+	</select>
+	
+	<select id="login" resultType="com.webmall.domain.CustomerVO">
+	
+		SELECT
+			cus_id, cus_name, cus_pw, cus_mail, cus_receive, cus_phone
+		FROM
+			customer_tbl
+		WHERE 
+			cus_id = #{cus_id}
+		
 	
 	</select>
 
