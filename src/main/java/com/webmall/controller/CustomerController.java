@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import com.webmall.domain.CustomerVO;
 import com.webmall.domain.EmailDTO;
@@ -55,7 +57,10 @@ public class CustomerController {
 	public String joinOk(CustomerVO vo, RedirectAttributes rttr) throws Exception{
 		
 		vo.setCus_pw(cryptPassEnc.encode(vo.getCus_pw()));
-		vo.setCus_receive(vo.getCus_receive().equals("Y") ? "Y" : "N");
+		
+		vo.setCus_receive(!StringUtils.isEmpty(vo.getCus_receive()) ? "Y" : "N");
+		
+		log.info("MemberVO: " + vo);
 		
 		service.join(vo);
 		
@@ -156,20 +161,66 @@ public class CustomerController {
 
 
 	// 회원수정 폼
-	@GetMapping("/modify")
-	public void modify() {
+	@GetMapping(value = {"/modify", "/mypage"})
+	public void modify(HttpSession session, Model model) {
+		
+		CustomerVO vo = (CustomerVO) session.getAttribute("loginStatus");
+		
+		String cus_id = vo.getCus_id();
+		
+		model.addAttribute(service.login(cus_id));
 		
 	}
 	
 	
 	
 	// 회원수정 저장
+	@PostMapping("/modify")
+	public String modify(CustomerVO vo, HttpSession session, RedirectAttributes rttr) {
+		
+		String redirectURL = "";
+		
+		vo.setCus_receive(!StringUtils.isEmpty(vo.getCus_receive()) ? "Y" : "N");
+		
+		log.info("회원수정정보: " + vo);
+		
+		CustomerVO session_vo = (CustomerVO) session.getAttribute("loginStatus");
+		
+		if(cryptPassEnc.matches(vo.getCus_pw(), session_vo.getCus_pw())) {
+			
+			service.modify(vo);
+						
+			redirectURL = "/";
+			rttr.addFlashAttribute("msg", "modifyOk");
+			
+		
+		}else {
+			redirectURL = "/customer/modify";
+			rttr.addFlashAttribute("msg", "modifyFail"); 
+		}
+		
+		
+		return "redirect:" + redirectURL;
+		
+	}
 	
 	
-	
-	
-	// 회원삭제
-	
+	// 회원삭제 regDelete
+	@ResponseBody
+	@PostMapping("/regDelete")
+	public ResponseEntity<Integer> regDelete(@RequestParam("cus_pw")String cus_pw, HttpSession session){
+		
+		ResponseEntity<Integer> entity = null;
+		
+		CustomerVO vo = (CustomerVO) session.getAttribute("loginStatus");
+		
+		String cus_id = vo.getCus_id(); 			
+		
+		entity = new ResponseEntity<Integer>(service.regDelete(cus_id, cryptPassEnc, cus_pw), HttpStatus.OK);
+		
+		return entity;
+		
+	}
 	
 	
 	
@@ -183,7 +234,7 @@ public class CustomerController {
 	// 로그인 
 	@ResponseBody
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestParam("cus_id") String cus_id, @RequestParam("cus_pw") String cus_pw,HttpSession session) throws Exception{
+	public ResponseEntity<String> login(@RequestParam("cus_id") String cus_id, @RequestParam("cus_pw") String cus_pw, HttpSession session) throws Exception{
 		
 		String result = "";
 		
@@ -214,16 +265,93 @@ public class CustomerController {
 	
 	
 	// 로그아웃
-	
-	
-	
-	
-	// 마이페이지
-	@GetMapping("/mypage")
-	public void mypage() {
+	@GetMapping("/logout")
+	public String logout(HttpSession session, RedirectAttributes rttr) {
+		
+		session.invalidate();
+		
+		
+		return "redirect:/";
 		
 	}
 	
+	// 비번찾기
+	@GetMapping("/searchPw")
+	public void searchPwform() {
+		
+	}
+	
+	
+	
+	// 비번찾기 기능
+	@ResponseBody
+	@PostMapping("/searchPw")
+	public ResponseEntity<String> searchPwfunction(@RequestParam("cus_mail") String cus_mail) {
+		
+		ResponseEntity<String> entity = null;		
+
+		if(!StringUtils.isEmpty(service.searchPwByEmail(cus_mail))) {
+			
+			String tempPw = makeAuthCode();		
+			
+			EmailDTO dto = new EmailDTO("webmall","kang5456@gmail.com",cus_mail,"webmall 인증메일", tempPw);
+			
+			MimeMessage message = mailSender.createMimeMessage();
+			
+			try {
+				message.addRecipient(RecipientType.TO, new InternetAddress(cus_mail));
+				
+				message.addFrom(new InternetAddress[] {new InternetAddress(dto.getSenderMail(),dto.getSenderName())});
+				
+				message.setSubject(dto.getSubject(), "utf-8");
+				
+				message.setText(dto.getMessage(), "utf-8");
+				
+				mailSender.send(message);
+				
+				String encryptPw = cryptPassEnc.encode(tempPw);
+				service.changePw(cus_mail, encryptPw);
+				
+				entity = new ResponseEntity<String>("success", HttpStatus.OK);
+				
+			}catch(Exception e) {
+				
+				e.printStackTrace();
+				
+				entity = new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+				
+			}
+			
+		}else {
+			
+			entity = new ResponseEntity<String>("noMail", HttpStatus.OK);
+			
+		}
+						
+		return entity;
+			
+		
+	}
+	
+	
+	// 비번 변경
+	@ResponseBody
+	@PostMapping("/changePw")
+	public ResponseEntity<String> changePw(@RequestParam("cur_cus_pw")String cur_cus_pw,@RequestParam("change_cus_pw") String change_cus_pw, HttpSession session){
+		
+		ResponseEntity<String> entity = null;
+		
+		CustomerVO vo = (CustomerVO) session.getAttribute("loginStatus");
+		
+		String cus_id = vo.getCus_id(); 
+		
+		String result = service.curPwConFirm(cus_id, cryptPassEnc,cur_cus_pw, cryptPassEnc.encode(change_cus_pw)); 
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		return entity;
+		
+	}
 	
 	
 	

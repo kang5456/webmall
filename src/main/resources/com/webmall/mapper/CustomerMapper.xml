@@ -47,5 +47,73 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		
 	
 	</select>
+	
+	<select id="searchPwByEmail" resultType="string">
+	
+		SELECT 
+			cus_mail 
+		FROM 
+			customer_tbl
+		WHERE 
+			cus_mail = #{cus_mail}
+	
+	</select>
+	
+	<update id="changePw">
+	
+		UPDATE
+			customer_tbl
+		SET 
+			cus_pw = #{cus_pw}
+		WHERE
+			cus_mail = #{cus_mail}
+	
+	</update>
+
+	<select id="curPwConFirm" resultType="string">
+	
+		SELECT 
+			cus_pw 
+		FROM 
+			customer_tbl
+		WHERE 
+			cus_id = #{cus_id} 
+	
+	</select>
+	
+	<update id="changeNewPw">
+	
+		UPDATE
+			customer_tbl
+		SET 
+			cus_pw = #{change_cus_pw}
+		WHERE
+			cus_id = #{cus_id}
+	
+	</update>
+	
+	
+	<update id="modify">
+
+		UPDATE
+			customer_tbl
+		SET
+			cus_mail = #{cus_mail}, 
+			cus_phone = #{cus_phone}, 
+			cus_receive = #{cus_receive}	
+		WHERE
+			cus_id = #{cus_id}
+		
+	</update>
+	
+	<delete id="regDelete">
+	
+		DELETE FROM
+			customer_tbl
+		WHERE
+			cus_id = #{cus_id}
+		
+	
+	</delete>
 
 </mapper>

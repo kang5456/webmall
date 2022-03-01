@@ -43,32 +43,20 @@
 
 
   <div class="row">
-    <h3>로그인 폼</h3>
+    <h3>비번찾기 폼</h3>
     <div class="container">
       <form>
         <div class="form-group row">
-          <label for="cus_id" class="col-sm-2 col-form-label">ID</label>
+          <label for="cus_mail" class="col-sm-2 col-form-label">Email Address</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="cus_id" name="cus_id" placeholder="ID">
+            <input type="text" class="form-control" id="cus_mail" name="cus_mail" placeholder="adc@webmall.com">
           </div>
         </div>
-        <div class="form-group row">
-          <label for="cus_pw" class="col-sm-2 col-form-label">Password</label>
-          <div class="col-sm-10">
-            <input type="password" class="form-control" id="cus_pw" name="cus_pw" placeholder="Password">
-          </div>
-        </div>
-		 
-        <div class="form-group row">
-          <label class="col-sm-2"></label>
-          <div class="col-sm-10">
-          	<button type="button" class="btn btn-link" id="btnSearchPw">Search Pw</button>
-          </div>
-        </div>
+
         
         <div class="form-group row">
-          <div class="offset-sm-2 col-sm-10">
-            <button type="button" id="btnLogin" class="btn btn-primary">Sign in</button>
+          <div class="col-sm-12">
+            <button type="button" id="btnMailSend" class="btn btn-primary">Mail Send</button>
           </div>
         </div>
       </form>
@@ -122,11 +110,43 @@
           }
         });
       });
-
-          $("#btnSearchPw").on("click", function(){
-            location.href = "/customer/searchPw";
-          });
+		
           
+        //비번 찾기 폼
+        $("#btnSearchPw").on("click", function(){
+          location.href = "/customer/searchPw";
+        });
+        
+        
+      	// 비번 찾기 메일
+        $("#btnMailSend").on("click", function(){
+
+          let cus_mail = $("#cus_mail");
+
+          if(cus_mail.val() == "" || cus_mail.val() == null){
+            alert("메일주소를 입력하세요");
+            cus_mail.focus();
+            return;
+          }
+
+          $.ajax({
+            url: '/customer/searchPw',
+            type: 'post',
+            dataType: 'text',
+            data: { cus_mail : cus_mail.val() },
+            success: function(data){
+              
+            
+            if(data == "success"){
+              alert("임시 메일 발송.");
+            }else if(data == "fail"){
+              alert("임시 메일 발송이 실패했습니다.")
+            }else if(data == "noMail"){
+              alert("입력하신 메일주소가 다릅니다.")
+            }
+          }
+        });
+      });      
     });
 
   </script>

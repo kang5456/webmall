@@ -68,10 +68,11 @@
     <input type="password" class="form-control" id="cus_pw" name="cus_pw">
   </div>
   
-  <div class="form-group">
-    <label for="cus_phone">Phone</label>
-    <input type="text" class="form-control" id="cus_phone" name="cus_phone">
+   <div class="form-group">
+    <label for="exampleInputEmail1">Password Check</label>
+    <input type="text" class="form-control" id="exampleInputEmail1">
   </div>
+  
   
   <div class="form-row">
   	<div class="col-md-6">
@@ -84,6 +85,10 @@
     	<button type="button" class="form-control" id="btnMailAuthReq">메일인증요청</button>
     </div>
     
+  <div class="form-group">
+    <label for="cus_phone">Phone</label>
+    <input type="text" class="form-control" id="cus_phone" name="cus_phone">
+  </div>
     <div class="col-md-2">
     	<label for="cus_mail">인증코드입력</label>
     	<input type="text" class="form-control" id="auth_mail" name="auth_mail">
@@ -95,7 +100,12 @@
     </div>
   </div>
   
-  <button type="button" id="btnJoin" class="btn btn-primary">Sign Up</button>
+  <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="cus_receive" name="cus_receive" value="Y">
+    <label class="form-check-label" for="cus_receive">메일수신여부</label>
+  </div>
+  
+  <button type="submit" id="btnJoin" class="btn btn-primary">Sign Up</button>
 </form>
 
 
