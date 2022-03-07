@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
    
-<%@ include file="/WEB-INF/views/include/plugin_js.jsp" %>  
+<%@ include file="/WEB-INF/views/admin/include/plugin_js.jsp" %>  
     
 <nav class="site-header sticky-top py-1">
   <div class="container d-flex flex-column flex-md-row justify-content-between">
