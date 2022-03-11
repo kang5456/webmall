@@ -6,4 +6,6 @@ public interface AdminMapper {
 
 	public AdminVO adminLogin(String admin_id);
 	
+	public int adminRegister(AdminVO vo);
+	
 }

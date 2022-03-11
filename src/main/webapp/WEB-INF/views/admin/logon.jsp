@@ -6,18 +6,26 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+<script>
+	let msg = '${msg}';
+	if(msg == "failId"){
+		alert("아이디를 확인해주세요");
+	}else if(msg == "failPw"){
+		alert("비밀번호를 확인해주세요");	
+	}
+</script>
 </head>
 <body>
 <h3>Admin Login</h3>
 <div style="text-align:center; width:350px;" class="h-100 row align-items-center">
 	<div class="login-form">
-	    <form action="/examples/actions/confirmation.php" method="post">
+	    <form action="/admin/logon" method="post">
 	        <h2 class="text-center">Log in</h2>       
 	        <div class="form-group">
-	            <input type="text" class="form-control" placeholder="Username" required="required">
+	            <input type="text" class="form-control" id="admin_id" name="admin_id" placeholder="Admin ID" required="required">
 	        </div>
 	        <div class="form-group">
-	            <input type="password" class="form-control" placeholder="Password" required="required">
+	            <input type="password" id="admin_pw" name="admin_pw" class="form-control" placeholder="Admin PW" required="required">
 	        </div>
 	        <div class="form-group">
 	            <button type="submit" class="btn btn-primary btn-block">Log in</button>

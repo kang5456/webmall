@@ -17,5 +17,14 @@
 			admin_id = #{admin_id}
 	
 	</select>
+	
+	<insert id="adminRegister">
+	
+		INSERT INTO
+			cus_admin_tbl(admin_id, admin_pw, admin_name)
+		VALUES
+			(#{admin_id},#{admin_pw},'관리자')
+	
+	</insert>
 
 </mapper>

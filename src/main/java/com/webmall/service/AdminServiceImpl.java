@@ -20,4 +20,10 @@ public class AdminServiceImpl implements AdminService {
 		return mapper.adminLogin(admin_id);
 	}
 
+	@Override
+	public int adminRegister(AdminVO vo) {
+		
+		return mapper.adminRegister(vo);
+	}
+
 }
