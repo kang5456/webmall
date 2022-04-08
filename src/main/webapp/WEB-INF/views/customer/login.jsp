@@ -40,12 +40,9 @@
 <%@include file="/WEB-INF/views/include/header.jsp" %>
 
 <div class="container">
-
-
-  <div class="row">
-    <h3>로그인 폼</h3>
-    <div class="container">
-      <form>
+  <h3>로그인 폼</h3>
+  <div class="container">
+        <form>
         <div class="form-group row">
           <label for="cus_id" class="col-sm-2 col-form-label">ID</label>
           <div class="col-sm-10">
@@ -72,7 +69,6 @@
           </div>
         </div>
       </form>
-    </div>
   </div>
 
 

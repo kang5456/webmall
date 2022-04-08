@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webmall.mapper.CartMapper">
+
+	<insert id="cartAdd">
+	
+		 MERGE INTO
+		 	cus_cart_tbl c
+		 USING
+		 	dual
+		 ON 
+		 	(c.cus_id = #{cus_id} and c.pdt_num = #{pdt_num})
+		 WHEN MATCHED THEN
+		 	UPDATE
+		 	SET
+		 		c.cart_amount = c.cart_amount + #{cart_amount}
+		 WHEN NOT MATCHED THEN
+		 	INSERT 
+				(
+					cart_code, 
+					pdt_num, 
+					cus_id, 
+					cart_amount
+				)
+			VALUES
+				(
+					seq_cus_cart_tbl.nextval, 
+					#{pdt_num}, 
+					#{cus_id}, 
+					#{cart_amount}
+				)
+	
+	</insert>
+	
+	<select id="cartList" resultType="com.webmall.domain.CartListVO">
+	
+		SELECT 
+	    	c.cart_code, 
+	    	c.pdt_num,
+	    	c.cus_id, 
+	    	c.cart_amount,
+	    	p.pdt_name, 
+	    	p.pdt_price, 
+	    	p.pdt_discount,  
+	    	p.pdt_img,
+	    	p.pdt_uploadpath
+		FROM 
+			cus_cart_tbl c 
+		INNER JOIN
+			cus_product_tbl p
+		ON 
+			c.pdt_num = p.pdt_num
+		WHERE
+			c.cus_id = #{cus_id}
+		
+	</select>
+	
+	<delete id="cartDel">
+	
+		DELETE FROM
+			cus_cart_tbl
+		WHERE
+			cart_code = #{cart_code}
+	
+	</delete>
+	
+	<delete id="cartAllDel">
+	
+		DELETE FROM
+			cus_cart_tbl
+		WHERE
+			cus_id = #{cus_id}
+	
+	</delete>
+
+
+</mapper>

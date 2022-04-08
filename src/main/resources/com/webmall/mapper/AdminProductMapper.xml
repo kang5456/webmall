@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webmall.mapper.AdminProductMapper">
+
+	<insert id="product_insert">
+	
+	INSERT INTO
+		cus_product_tbl
+		(
+			pdt_num, 
+			cg_first_code, 
+			cg_code, 
+			pdt_name, 
+			pdt_price, 
+			pdt_discount, 
+			pdt_publisher, 
+			pdt_content,
+			pdt_uploadpath, 
+			pdt_img, 
+			pdt_amount, 
+			pdt_buy
+		)
+	VALUES
+		(
+			seq_cus_product_num.nextval,
+			#{cg_first_code},
+			#{cg_code},
+			#{pdt_name},
+			#{pdt_price},
+			#{pdt_discount},
+			#{pdt_publisher},
+			#{pdt_content},
+			#{pdt_uploadpath},
+			#{pdt_img},
+			#{pdt_amount},
+			#{pdt_buy}
+		)
+	
+	</insert>
+
+	<select id="mainCategory" resultType="com.webmall.domain.CategoryVO">
+	
+		SELECT 
+			cg_code, 
+			cg_first_code, 
+			cg_name 
+		FROM 
+			cus_category_tbl 
+		WHERE 
+			cg_first_code IS NULL
+	
+	</select>
+	
+	<select id="subCategory" resultType="com.webmall.domain.CategoryVO">
+	
+		SELECT 
+			cg_code, 
+			cg_first_code, 
+			cg_name 
+		FROM 
+			cus_category_tbl 
+		WHERE 
+			cg_first_code = #{cg_code}
+	
+	</select>
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'N'.toString()">
+							pdt_name like '%' || #{keyword} || '%'
+						</when>
+						<when test="type == 'P'.toString()">
+							pdt_publisher like '%' || #{keyword} || '%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim> 
+	</sql>
+
+	<select id="getListWithPaging" resultType="com.webmall.domain.ProductVO">
+	
+		<![CDATA[ 
+		SELECT 
+		 	pdt_num, 
+		 	cg_first_code, 
+		 	cg_code, 
+		 	pdt_name, 
+		 	pdt_price, 
+		 	pdt_discount, 
+		 	pdt_publisher, 
+		 	pdt_content, 
+		 	pdt_img,
+		 	pdt_uploadpath, 
+		 	pdt_amount, 
+		 	pdt_buy, 
+		 	pdt_date, 
+		 	pdt_update
+		FROM (
+		        SELECT 
+		        /*+ index_desc(cus_product_tbl pk_cus_product_tbl) */ 
+		        rownum rn,
+		        pdt_num, 
+		        cg_first_code, 
+		        cg_code, 
+		        pdt_name, 
+		        pdt_price, 
+		        pdt_discount, 
+		        pdt_publisher, 
+		        pdt_content,
+		        pdt_uploadpath, 
+		        pdt_img, 
+		        pdt_amount, 
+		        pdt_buy, 
+		        pdt_date, 
+		        pdt_update
+		    FROM 
+		    	cus_product_tbl
+		    WHERE 
+		]]> 
+		    
+		<include refid="criteria"></include>
+		
+		<![CDATA[     
+				    rownum <= (#{pageNum} * #{amount}) 
+				)
+		        
+		WHERE rn > ((#{pageNum} - 1) * #{amount} )
+		]]>
+	
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+		SELECT 
+			count(*) 
+		FROM 
+			cus_product_tbl 
+		WHERE
+		
+		<include refid="criteria"></include> 
+		
+		pdt_num > 0
+		
+	</select>
+
+	<select id="product_modify" resultType="com.webmall.domain.ProductVO">
+	
+		SELECT 
+	        pdt_num, 
+	        cg_first_code, 
+	        cg_code, 
+	        pdt_name, 
+	        pdt_price, 
+	        pdt_discount, 
+	        pdt_publisher, 
+	        pdt_content,
+	        pdt_uploadpath, 
+	        pdt_img, 
+	        pdt_amount, 
+	        pdt_buy, 
+	        pdt_date, 
+	        pdt_update
+	    FROM 
+	    	cus_product_tbl
+	    WHERE
+			pdt_num = #{pdt_num}
+	</select>
+
+
+	<update id="product_modifyOk">
+	
+		UPDATE
+			cus_product_tbl
+		SET
+			cg_first_code = #{cg_first_code}, 
+	       	cg_code = #{cg_code}, 
+	       	pdt_price = #{pdt_price}, 
+	       	pdt_discount = #{pdt_discount}, 
+	       	pdt_publisher = #{pdt_publisher}, 
+	       	pdt_content = #{pdt_content},
+	       	pdt_uploadpath = #{pdt_uploadpath}, 
+	       	pdt_img = #{pdt_img}, 
+	       	pdt_amount = #{pdt_amount}, 
+	       	pdt_buy = #{pdt_buy}, 
+	       	pdt_update = sysdate
+		WHERE
+			pdt_num = #{pdt_num}
+	
+	</update>
+
+	<delete id="product_delete">
+	
+		DELETE FROM
+			cus_product_tbl
+		WHERE 
+			pdt_num = #{pdt_num}
+	
+	</delete>
+
+</mapper>

@@ -54,8 +54,8 @@
               </span>
           </a>
           <ul class="treeview-menu">
-           	<li><a href="#">상품등록</a></li>
-            <li><a href="#">상품리스트</a></li>           
+           	<li><a href="/admin/product/productInsert">상품등록</a></li>
+            <li><a href="/admin/product/productList">상품리스트</a></li>           
           </ul>
         </li>
             <li class="treeview">

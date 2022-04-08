@@ -8,6 +8,7 @@
 <script src="/dist/js/adminlte.min.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.min2.css">
 
+
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. -->

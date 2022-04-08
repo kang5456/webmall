@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webmall.mapper.UserProductMapper">
+
+
+	<select id="mainCategory" resultType="com.webmall.domain.CategoryVO">
+	
+		SELECT 
+			cg_code, 
+			cg_first_code, 
+			cg_name 
+		FROM 
+			cus_category_tbl 
+		WHERE 
+			cg_first_code IS NULL
+	
+	</select>
+	
+	<select id="subCategory" resultType="com.webmall.domain.CategoryVO">
+	
+		SELECT 
+			cg_code, 
+			cg_first_code, 
+			cg_name 
+		FROM 
+			cus_category_tbl 
+		WHERE 
+			cg_first_code = #{cg_code}
+	
+	</select>
+	
+		<select id="getListWithPaging" resultType="com.webmall.domain.ProductVO">
+	
+		<![CDATA[ 
+		SELECT 
+		 	pdt_num, 
+		 	cg_first_code, 
+		 	cg_code, 
+		 	pdt_name, 
+		 	pdt_price, 
+		 	pdt_discount, 
+		 	pdt_publisher, 
+		 	pdt_content, 
+		 	pdt_img,
+		 	pdt_uploadpath, 
+		 	pdt_amount, 
+		 	pdt_buy, 
+		 	pdt_date, 
+		 	pdt_update
+		FROM (
+		        SELECT 
+		        /*+ index_desc(cus_product_tbl pk_cus_product_tbl) */ 
+		        rownum rn,
+		        pdt_num, 
+		        cg_first_code, 
+		        cg_code, 
+		        pdt_name, 
+		        pdt_price, 
+		        pdt_discount, 
+		        pdt_publisher, 
+		        pdt_content,
+		        pdt_uploadpath, 
+		        pdt_img, 
+		        pdt_amount, 
+		        pdt_buy, 
+		        pdt_date, 
+		        pdt_update
+		    FROM 
+		    	cus_product_tbl
+		    WHERE 
+		    	cg_code = #{cg_code}  
+		    	AND
+				rownum <= (#{cri.pageNum} * #{cri.amount}) 
+			)
+		        
+		WHERE rn > ((#{cri.pageNum} - 1) * #{cri.amount} )
+		]]>
+	
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+		SELECT 
+			count(*) 
+		FROM 
+			cus_product_tbl 
+		WHERE
+			cg_code = #{cg_code}
+		
+	</select>
+	
+	<select id="productDetail" resultType="com.webmall.domain.ProductVO">
+	
+		SELECT 
+	        pdt_num, 
+	        cg_first_code, 
+	        cg_code, 
+	        pdt_name, 
+	        pdt_price, 
+	        pdt_discount, 
+	        pdt_publisher, 
+	        pdt_content,
+	        pdt_uploadpath, 
+	        pdt_img, 
+	        pdt_amount, 
+	        pdt_buy, 
+	        pdt_date, 
+	        pdt_update
+	    FROM 
+	    	cus_product_tbl
+	    WHERE 
+	    	pdt_num = #{pdt_num}  
+	
+	</select>
+	
+
+
+</mapper>
